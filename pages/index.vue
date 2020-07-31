@@ -1,28 +1,18 @@
 <template>
   <div class="container">
     <div>
-      <Logo />
-      <h1 class="title">
-        appetizer-attender-front
-      </h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
+      <p class="background">
+        <img src="~assets/image/main-logo-white.png">
+        <h1>
+          今日のあなたはどのお酒？
+        </h1>
+      </p>
+      <button @click=""><img src="~assets/image/drink_beer.png" width="100" height="100">ビール</button>
+      <button @click=""><img src="~assets/image/drink_nihonsyu.png" width="100" height="100">日本酒</button>
+      <button @click=""><img src="~assets/image/party_highball_glass.png" width="100" height="100">ハイボール</button><br>
+      <button @click=""><img src="~assets/image/red_wine.png" width="100" height="100">赤ワイン</button>
+      <button @click=""><img src="~assets/image/white_wine.png" width="100" height="100">白ワイン</button>
+      <button @click=""><img src="~assets/image/drink_cocktail.png" width="100" height="100">カクテル</button>
     </div>
   </div>
 </template>
@@ -74,5 +64,9 @@ export default {}
 
 .links {
   padding-top: 15px;
+}
+
+.background {
+  background-color: #ef93b6
 }
 </style>
