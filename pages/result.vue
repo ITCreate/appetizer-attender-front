@@ -28,7 +28,26 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data: () => ({
+    result: [],
+  }),
+  created() {
+    this.fetchResult();
+  },
+  methods: {
+    fetchResult() {
+      // 結果を取得するAPIを叩く
+      // バックエンド対応待ち
+      // とりあえずダミーデータ
+      this.result = [
+        { id: 1, name: "餃子", image: "https://1.bp.blogspot.com/-JgCCcKaPehk/XuRAqUWJgLI/AAAAAAABZgQ/hY77s2QpJjQG1kk78jR91O4LRrinBRWaQCNcBGAsYHQ/s1600/food_jelly_fry.png" },
+        { id: 1, name: "ごはん", image: "https://4.bp.blogspot.com/-S9iMvM5-DcI/VoX5L4XQDlI/AAAAAAAA2TA/JiN-OviBAcE/s800/food_mamegohan.png" },
+        { id: 1, name: "パスタ", image: "https://1.bp.blogspot.com/-s0F8ah-KmmA/XobTIIgFn3I/AAAAAAABYFA/RLUBWSpeAusE4R2SmGPqaa0ZLeb05MybQCNcBGAsYHQ/s1600/food_gyouza_age.png" },
+      ];
+    }
+  }
+};
 </script>
 
 <style>
