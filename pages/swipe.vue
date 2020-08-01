@@ -40,21 +40,21 @@
         <div class="swipe-button">
           <img
             src="~/assets/images/nope.png"
-            @click="decide('nope'); cantEat();"
+            @click="decide('nope')"
           >
           <span>食べれない</span>
         </div>
         <div class="swipe-button">
           <img
             src="~/assets/images/super-like.png"
-            @click="decide('super'); canEat();"
+            @click="decide('super')"
           >
           <span>好きなもの</span>
         </div>
         <div class="swipe-button">
           <img
             src="~/assets/images/like.png"
-            @click="decide('like'); canEat();"
+            @click="decide('like')"
           >
           <span>食べれる</span>
         </div>
@@ -71,21 +71,23 @@ export default {
     VueTinder,
   },
   data: () => ({
-    alcoholicBeverage: {},
     nibbles: [],
     queue: [],
+    requestPayload: {
+      alcoholicBeverageId: null,
+      selectNibbles: [],
+    },
     offset: 0,
   }),
   created() {
-    this.getAlcoholicBeverage();
+    this.requestPayload.alcoholicBeverageId = this.$route.params.alcoholicBeverage;
+
     this.fetchNibbles();
   },
   methods: {
-    getAlcoholicBeverage() {
-      this.alcoholicBeverage = this.$route.params.alcoholicBeverage;
-    },
+    // FIXME: asyncDataでとったほうが良さそう
     async fetchNibbles() {
-      await this.$axios.get("/nibbles").then(res => {
+      await this.$axios.get("/nibbles").then((res) => {
         this.nibbles = res.data;
         this.mock();
       });
@@ -93,6 +95,7 @@ export default {
     mock() {
       const list = [];
       const nibbles = this.nibbles;
+
       for (let i = 0; i < nibbles.length + 1; i++) {
         list.push({
           id:
@@ -112,29 +115,47 @@ export default {
       }
       this.queue = this.queue.concat(list);
     },
-    onSubmit({ item }) {
-      this.saveSwipe(item, "食べれるか食べられへんかみたいなステータス取って渡したいけどやり方が分からん");
+    onSubmit({ type, item }) {
+      this.saveSwipe(type, item);
+
       if (this.canMoveResult()) {
-        // スワイプ情報も遷移先に渡すようにする
-        this.$router.push({ name: "results", params: {
-          swipes: "スワイプ情報がここに入ります"
-        } });
+        // 遷移がいきなりおきるのはびっくりするのでちょっと待つ
+        setTimeout(() => {
+          // スワイプ情報も遷移先に渡すようにする
+          this.$router.push({
+            name: "results",
+            params: {
+              swipes: this.requestPayload,
+            },
+          });
+        }, 1000);
       }
+
       if (this.queue.length < 3) {
         this.mock();
       }
     },
     decide(choice) {
+      // これを呼ぶと、VueTinderコンポーネントの @submit イベントが自動的に発火するので、onSubmit内でtypeとitem受け取ればOK
       this.$refs.tinder.decide(choice);
     },
-    canEat() {
-      this.saveSwipe(item, "食べれるか食べられへんかみたいなステータス取って渡したいけどやり方が分からん");
-    },
-    cantEat() {
-      this.saveSwipe(item, "食べれるか食べられへんかみたいなステータス取って渡したいけどやり方が分からん");
-    },
-    saveSwipe(item, status) {
-      // ゴニョる
+    saveSwipe(type, item) {
+      if (type === "like") {
+        this.requestPayload.selectNibbles.push({
+          id: item.id,
+          likeLevel: 1,
+        });
+      } else if (type === "super") {
+        this.requestPayload.selectNibbles.push({
+          id: item.id,
+          likeLevel: 2,
+        });
+      } else {
+        this.requestPayload.selectNibbles.push({
+          id: item.id,
+          likeLevel: 0,
+        });
+      }
     },
     canMoveResult() {
       return this.queue
