@@ -46,6 +46,11 @@ export default {
       this.queue = this.queue.concat(list);
     },
     onSubmit({ item }) {
+      // ここにスワイプ情報を保存する処理を書く
+      if (this.canMoveResult()) {
+        // スワイプ情報も遷移先に渡すようにする
+        this.$router.push("/result")
+      }
       if (this.queue.length < 3) {
         this.mock();
       }
@@ -72,6 +77,9 @@ export default {
           image: "https://cn.bing.com//th?id=OHR.LofotenSurfing_ZH-CN5901239545_UHD.jpg&pid=hp&w=720&h=1280&rs=1&c=4&r=0",
         },
       ]
+    },
+    canMoveResult() {
+      return this.queue.map(v => v.name).every(v => typeof v === "undefined")
     }
   }
 };
