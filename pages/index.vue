@@ -30,52 +30,19 @@ export default {
     };
   },
   created() {
-    this.alcoholicBeverages = this.fetchAlcoholicBeverages();
+    this.fetchAlcoholicBeverages();
   },
   methods: {
-    fetchAlcoholicBeverages() {
-      // APIを叩く
-      // バックエンドは実装中のためとりあえずダミーデータ
-      return [
-        {
-          id: 1,
-          name: "白ワイン",
-          image: require("~/assets/images/white-wine.png"),
-        },
-        {
-          id: 2,
-          name: "ビール",
-          image: require("~/assets/images/beer.png"),
-        },
-        {
-          id: 3,
-          name: "日本酒",
-          image: require("~/assets/images/japanese-sake.png"),
-        },
-        {
-          id: 4,
-          name: "カクテル",
-          image: require("~/assets/images/cocktail.png"),
-        },
-        {
-          id: 5,
-          name: "赤ワイン",
-          image: require("~/assets/images/red-wine.png"),
-        },
-        {
-          id: 6,
-          name: "ハイボール",
-          image: require("~/assets/images/mojito.png"),
-        },
-      ];
+    async fetchAlcoholicBeverages() {
+      this.alcoholicBeverages = await this.$axios.$get("/alcoholic_beverages");
     },
-    redirectSwipe(alchole, target) {
+    redirectSwipe(alcohol, target) {
       target.parentNode.classList.toggle("action");
       setTimeout(() => {
         target.parentNode.classList.toggle("action");
-
-        // TODO: 遷移先にalchole情報も渡す
-        this.$router.push("/swipe");
+        this.$router.push({name: "swipe", params: {
+          "alcoholicBeverage": alcohol,
+        }});
       }, 1000);
     },
   },

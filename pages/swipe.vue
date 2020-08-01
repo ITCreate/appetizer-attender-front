@@ -71,13 +71,18 @@ export default {
     VueTinder,
   },
   data: () => ({
+    alcoholicBeverage: {},
     queue: [],
     offset: 0,
   }),
   created() {
+    this.getAlcoholicBeverage();
     this.mock();
   },
   methods: {
+    getAlcoholicBeverage() {
+      this.alcoholicBeverage = this.$route.params.alcoholicBeverage;
+    },
     mock() {
       const list = [];
       // APIを叩く
