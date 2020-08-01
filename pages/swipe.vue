@@ -23,17 +23,17 @@
         <img
           class="like-pointer"
           slot="like"
-          src="~/assets/like-txt.png"
+          src="~/assets/images/like-txt.png"
         >
         <img
           class="nope-pointer"
           slot="nope"
-          src="~/assets/nope-txt.png"
+          src="~/assets/images/nope-txt.png"
         >
         <img
           class="super-pointer"
           slot="super"
-          src="~/assets/super-txt.png"
+          src="~/assets/images/super-txt.png"
         >
       </VueTinder>
       <div class="swipe-buttons">
@@ -179,8 +179,9 @@ export default {
   position: absolute;
   z-index: 1;
   top: 20px;
-  width: 64px;
-  height: 64px;
+  width: 140px;
+  height: 96px;
+  object-fit: contain;
 }
 
 .nope-pointer {
@@ -198,8 +199,9 @@ export default {
   left: 0;
   right: 0;
   margin: auto;
-  width: 112px;
-  height: 78px;
+  width: 200px;
+  height: 144px;
+  object-fit: contain;
 }
 
 .pic {
