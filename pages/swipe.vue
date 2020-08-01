@@ -74,20 +74,24 @@ export default {
     nibbles: [],
     queue: [],
     requestPayload: {
-      alcoholicBeverageId: null,
+      alcoholicBeverage: {},
       selectNibbles: [],
     },
     offset: 0,
   }),
   created() {
-    this.requestPayload.alcoholicBeverageId = this.$route.params.alcoholicBeverage;
-
+    this.requestPayload.alcoholicBeverage = this.$route.params.alcoholicBeverage;
     this.fetchNibbles();
   },
   methods: {
     // FIXME: asyncDataでとったほうが良さそう
     async fetchNibbles() {
-      await this.$axios.get("/nibbles").then((res) => {
+      console.log(this.requestPayload)
+      await this.$axios.get("/nibbles", {
+        params: {
+          alcoholicBeverage: this.requestPayload.alcoholicBeverage,
+        }
+      }).then((res) => {
         this.nibbles = res.data;
         this.mock();
       });
