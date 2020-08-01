@@ -1,72 +1,71 @@
 <template>
   <div class="container">
     <div>
-      <p class="background">
-        <img src="~assets/image/main-logo-white.png">
-        <h1>
-          今日のあなたはどのお酒？
-        </h1>
-      </p>
-      <button @click=""><img src="~assets/image/drink_beer.png" width="100" height="100">ビール</button>
-      <button @click=""><img src="~assets/image/drink_nihonsyu.png" width="100" height="100">日本酒</button>
-      <button @click=""><img src="~assets/image/party_highball_glass.png" width="100" height="100">ハイボール</button><br>
-      <button @click=""><img src="~assets/image/red_wine.png" width="100" height="100">赤ワイン</button>
-      <button @click=""><img src="~assets/image/white_wine.png" width="100" height="100">白ワイン</button>
-      <button @click=""><img src="~assets/image/drink_cocktail.png" width="100" height="100">カクテル</button>
+      <img src="~assets/image/main-logo-white.png" />
+      <h1>今日のあなたはどのお酒？</h1>
+      <ul v-for="alchole in alcoholicBeverages" :key="alchole.id">
+        <li>
+          <img :src="alchole.image" @click="redirectSwipe(alchole)" width="100" height="100" />
+        </li>
+      </ul>
     </div>
   </div>
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      alcoholicBeverages: [],
+    }
+  },
+  created() {
+    this.alcoholicBeverages = this.fetchAlcoholicBeverages();
+  },
+  methods: {
+    fetchAlcoholicBeverages() {
+      // APIを叩く
+      // バックエンドは実装中のためとりあえずダミーデータ
+      return [
+        {
+          id: 1,
+          name: "白ワイン",
+          image: require("~/assets/image/white_wine.png"),
+        },
+        {
+          id: 2,
+          name: "ビール",
+          image: require("~/assets/image/drink_beer.png"),
+        },
+        {
+          id: 3,
+          name: "日本酒",
+          image: require("~/assets/image/drink_nihonsyu.png"),
+        },
+        {
+          id: 4,
+          name: "カクテル",
+          image: require("~/assets/image/drink_cocktail.png"),
+        },
+        {
+          id: 5,
+          name: "赤ワイン",
+          image: require("~/assets/image/red_wine.png"),
+        },
+        {
+          id: 6,
+          name: "ハイボール",
+          image: require("~/assets/image/party_highball_glass.png"),
+        }
+      ];
+    },
+    redirectSwipe(alchole) {
+      // 遷移先にalchole情報も渡す
+      this.$router.push("/swipe");
+    },
+  }
+}
 </script>
 
 <style>
-/* Sample `apply` at-rules with Tailwind CSS
-.container {
-@apply min-h-screen flex justify-center items-center text-center mx-auto;
-}
-*/
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.title {
-  font-family:
-    'Quicksand',
-    'Source Sans Pro',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-}
-
-.background {
-  background-color: #ef93b6
-}
 </style>
