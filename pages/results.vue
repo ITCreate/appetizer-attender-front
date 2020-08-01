@@ -11,8 +11,11 @@
       </h1>
       <div class="fusion-champion">
         <div class="fusion-champion-item">
-          <!-- <img :src="results.match.oneNibble.image">
-          <span>{{results.match.oneNibble.name}}</span> -->
+          <img
+            v-if="results.match.oneNibble.image"
+            :src="results.match.oneNibble.image"
+          >
+          <span v-if="results.match.oneNibble.name">{{results.match.oneNibble.name}}</span>
         </div>
         <img
           class="cross-mark"
@@ -20,8 +23,11 @@
           alt="×"
         >
         <div class="fusion-champion-item">
-          <!-- <img :src="results.match.twoNibble.image">
-          <span>{{results.match.twoNibble.name}}</span> -->
+          <img
+            v-if="results.match.twoNibble.image"
+            :src="results.match.twoNibble.image"
+          >
+          <span v-if="results.match.twoNibble.name">{{results.match.twoNibble.name}}</span>
         </div>
       </div>
       <div>
@@ -30,15 +36,17 @@
           src="~/assets/images/with.png"
           alt="with"
         >
-        <!-- <img
+        <img
           class="fusion-champion-alcoholic-beverage"
+          v-if="results.match.alcoholicBeverage.image"
           :src="results.match.alcoholicBeverage.image"
-        > -->
+        >
+        <span class="fusion-champion-alcoholic-beverage-name" v-if="results.match.alcoholicBeverage.name">{{results.match.alcoholicBeverage.name}}</span>
       </div>
-      <button
+      <!-- <button
         class="start-review-button"
         type="button"
-      >レビューする</button>
+      >レビューする</button> -->
     </div>
     <div class="result-others">
       <h2>その他のマッチする食事</h2>
@@ -60,47 +68,54 @@ export default {
   data: () => ({
     results: [],
   }),
-  async created() {
-    this.results = await this.fetchResults();
+  watch: {
+    results(newValue) {
+      console.log(newValue);
+      this.results = this.fetchResults();
+    },
+  },
+  created() {
+    this.results = this.fetchResults();
   },
   methods: {
-    async fetchResults() {
-      console.log(this.$route.params.swipes);
+    fetchResults() {
+      // console.log(this.$route.params.swipes);
 
-      const requestPayload = {
-        alcoholic_beverage_id: this.$route.params.swipes.alcoholicBeverage.id,
-        select_nibbles: this.$route.params.swipes.selectNibbles,
-      };
+      const { alcoholicBeverage, selectNibbles } = this.$route.params.swipes;
 
-      const d = await this.$axios.$post("/nibbles/result", {
-        params: requestPayload,
+      const likedNibbles = selectNibbles
+        .map((sn) => {
+          if (sn.likeLevel !== 0) return sn;
+        })
+        .filter((v) => v);
+
+      const sortedLikedNibbles = likedNibbles.sort((ln1, ln2) => {
+        return (ln1.likedLevel + Math.floor(Math.random() * 8) + 1) - (ln2.likedLebel + Math.floor(Math.random() * 6) + 1)
       });
-      console.log(d);
+      const [oneNibble, twoNibble, ...candicates] = sortedLikedNibbles;
+
+      // const d = await this.$axios.$post("/nibbles/results", requestPayload);
+      // console.log(d);
       // 結果を取得するAPIを叩く
       // バックエンド対応待ち
       // とりあえずダミーデータ
+      console.log({
+        match: {
+          id: 12, // レビューページ用組み合わせID
+          alcoholicBeverage: alcoholicBeverage,
+          oneNibble: oneNibble,
+          twoNibble: twoNibble,
+        },
+        candidates: candicates,
+      });
       return {
         match: {
           id: 12, // レビューページ用組み合わせID
-          alcoholicBeverage: {
-            name: "日本酒",
-            image: "http://placehold.it/300x500",
-          },
-          oneNibble: {
-            name: "えだまめ",
-            image: "http://placehold.it/300x500",
-          },
-          twoNibble: {
-            name: "からあげ",
-            image: "http://placehold.it/300x500",
-          },
+          alcoholicBeverage: alcoholicBeverage,
+          oneNibble: oneNibble,
+          twoNibble: twoNibble,
         },
-        candidates: [
-          {
-            name: "からあげ",
-            image: "http://placehold.it/300x500",
-          },
-        ],
+        candidates: candicates,
       };
     },
   },
@@ -183,6 +198,10 @@ export default {
   max-height: 240px;
 }
 
+.fusion-champion-alcoholic-beverage-name {
+  @apply block my-2 font-bold text-center text-lg;
+}
+
 .result-others {
   @apply bg-gray-700;
 }
@@ -197,10 +216,14 @@ export default {
 
 .result-others-list > li {
   @apply w-2/5 mx-2 my-1 text-center font-bold relative;
+  height: 120px;
 }
 
 .result-others-list img {
   @apply rounded-lg;
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
 }
 
 .result-others-list span {

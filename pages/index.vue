@@ -7,7 +7,7 @@
           src="~assets/images/main-logo-white.png"
         />
       </div>
-      <h1 class="hero-message">今日のあなたはどのお酒？</h1>
+      <h1 class="hero-message">今日あなたが飲むのは<br>どのお酒？</h1>
       <ul class="alchole-items">
         <li
           class="alchole-item"
@@ -15,6 +15,7 @@
           :key="alchole.id"
           @click="redirectSwipe(alchole, $event.target)"
         >
+          <span class="alchole-item-name" :src="alchole.name" />
           <img :src="alchole.image" />
         </li>
       </ul>
@@ -40,9 +41,12 @@ export default {
       target.parentNode.classList.toggle("action");
       setTimeout(() => {
         target.parentNode.classList.toggle("action");
-        this.$router.push({name: "swipe", params: {
-          "alcoholicBeverage": alcohol,
-        }});
+        this.$router.push({
+          name: "swipe",
+          params: {
+            alcoholicBeverage: alcohol,
+          },
+        });
       }, 1000);
     },
   },
@@ -57,6 +61,10 @@ export default {
   background: linear-gradient(to bottom, #ffdce1, #ff7186 80%, #ff7a5c);
 }
 
+.hero-image {
+  @apply mx-auto;
+}
+
 .hero-message {
   @apply my-6 text-center text-2xl font-bold;
   color: #575757;
@@ -69,8 +77,9 @@ export default {
 .alchole-item {
   flex-grow: 1;
   width: 25%;
+  max-width: 100px;
   margin: 2% 2%;
-  @apply shadow-lg rounded-lg overflow-hidden;
+  @apply shadow-lg rounded-lg overflow-hidden relative;
 }
 
 .alchole-item > img {
@@ -78,6 +87,14 @@ export default {
   height: 7rem;
   object-fit: cover;
   @apply rounded-lg;
+}
+
+.alchole-item-name {
+  @apply block my-2 font-bold text-2xl text-white absolute;
+  bottom: 1rem;
+  left: 1rem;
+  text-shadow: 1px 2px 3px #787878;
+  z-index: 100;
 }
 
 .alchole-item.action {
