@@ -102,7 +102,7 @@ export default {
       // ここにスワイプ情報を保存する処理を書く
       if (this.canMoveResult()) {
         // スワイプ情報も遷移先に渡すようにする
-        this.$router.push("/result");
+        this.$router.push("/results");
       }
       if (this.queue.length < 3) {
         this.mock();
