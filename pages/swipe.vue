@@ -18,7 +18,7 @@
           <div
             class="pic"
             :style="{'background-image': `url(${scope.data.image})`}"
-          />
+          ><span class="fusion-champion-alcoholic-name">{{scope.data.name}}</span></div>
         </template>
         <img
           class="like-pointer"
@@ -86,15 +86,17 @@ export default {
   methods: {
     // FIXME: asyncDataでとったほうが良さそう
     async fetchNibbles() {
-      console.log(this.requestPayload)
-      await this.$axios.get("/nibbles", {
-        params: {
-          alcoholicBeverage: this.requestPayload.alcoholicBeverage,
-        }
-      }).then((res) => {
-        this.nibbles = res.data;
-        this.mock();
-      });
+      console.log(this.requestPayload);
+      await this.$axios
+        .get("/nibbles", {
+          params: {
+            alcoholicBeverage: this.requestPayload.alcoholicBeverage,
+          },
+        })
+        .then((res) => {
+          this.nibbles = res.data;
+          this.mock();
+        });
     },
     mock() {
       const list = [];
@@ -144,19 +146,26 @@ export default {
       this.$refs.tinder.decide(choice);
     },
     saveSwipe(type, item) {
+      console.log(item);
       if (type === "like") {
         this.requestPayload.selectNibbles.push({
           id: item.id,
+          image: item.image,
+          name: item.name,
           likeLevel: 1,
         });
       } else if (type === "super") {
         this.requestPayload.selectNibbles.push({
           id: item.id,
+          image: item.image,
+          name: item.name,
           likeLevel: 2,
         });
       } else {
         this.requestPayload.selectNibbles.push({
           id: item.id,
+          image: item.image,
+          name: item.name,
           likeLevel: 0,
         });
       }
@@ -277,5 +286,12 @@ export default {
 
 .swipe-buttons img:nth-last-child(1) {
   margin-right: 0;
+}
+
+.fusion-champion-alcoholic-name {
+  @apply block my-2 font-bold text-2xl text-white absolute;
+  bottom: 1rem;
+  left: 1rem;
+  text-shadow: 1px 2px 3px #787878;
 }
 </style>

@@ -11,8 +11,11 @@
       </h1>
       <div class="fusion-champion">
         <div class="fusion-champion-item">
-          <img :src="results.top_two[0].image">
-          <span>{{results.top_two[0].name}}</span>
+          <img
+            v-if="results.match.oneNibble.image"
+            :src="results.match.oneNibble.image"
+          >
+          <span v-if="results.match.oneNibble.name">{{results.match.oneNibble.name}}</span>
         </div>
         <img
           class="cross-mark"
@@ -20,8 +23,11 @@
           alt="×"
         >
         <div class="fusion-champion-item">
-          <img :src="results.top_two[1].image">
-          <span>{{results.top_two[1].name}}</span>
+          <img
+            v-if="results.match.twoNibble.image"
+            :src="results.match.twoNibble.image"
+          >
+          <span v-if="results.match.twoNibble.name">{{results.match.twoNibble.name}}</span>
         </div>
       </div>
       <div>
@@ -31,14 +37,16 @@
           alt="with"
         >
         <img
-          class="fusion-champion-candidate"
-          :src="results.candidates[2].image"
+          class="fusion-champion-alcoholic-beverage"
+          v-if="results.match.alcoholicBeverage.image"
+          :src="results.match.alcoholicBeverage.image"
         >
+        <span class="fusion-champion-alcoholic-beverage-name" v-if="results.match.alcoholicBeverage.name">{{results.match.alcoholicBeverage.name}}</span>
       </div>
-      <button
+      <!-- <button
         class="start-review-button"
         type="button"
-      >レビューする</button>
+      >レビューする</button> -->
     </div>
     <div class="result-others">
       <h2>その他のマッチする食事</h2>
@@ -60,61 +68,54 @@ export default {
   data: () => ({
     results: [],
   }),
+  watch: {
+    results(newValue) {
+      console.log(newValue);
+      this.results = this.fetchResults();
+    },
+  },
   created() {
     this.results = this.fetchResults();
   },
   methods: {
     fetchResults() {
+      // console.log(this.$route.params.swipes);
+
+      const { alcoholicBeverage, selectNibbles } = this.$route.params.swipes;
+
+      const likedNibbles = selectNibbles
+        .map((sn) => {
+          if (sn.likeLevel !== 0) return sn;
+        })
+        .filter((v) => v);
+
+      const sortedLikedNibbles = likedNibbles.sort((ln1, ln2) => {
+        return (ln1.likedLevel + Math.floor(Math.random() * 8) + 1) - (ln2.likedLebel + Math.floor(Math.random() * 6) + 1)
+      });
+      const [oneNibble, twoNibble, ...candicates] = sortedLikedNibbles;
+
+      // const d = await this.$axios.$post("/nibbles/results", requestPayload);
+      // console.log(d);
       // 結果を取得するAPIを叩く
       // バックエンド対応待ち
       // とりあえずダミーデータ
+      console.log({
+        match: {
+          id: 12, // レビューページ用組み合わせID
+          alcoholicBeverage: alcoholicBeverage,
+          oneNibble: oneNibble,
+          twoNibble: twoNibble,
+        },
+        candidates: candicates,
+      });
       return {
-        top_two: [
-          {
-            id: 1,
-            name: "餃子",
-            image:
-              "https://1.bp.blogspot.com/-JgCCcKaPehk/XuRAqUWJgLI/AAAAAAABZgQ/hY77s2QpJjQG1kk78jR91O4LRrinBRWaQCNcBGAsYHQ/s1600/food_jelly_fry.png",
-          },
-          {
-            id: 2,
-            name: "ごはん",
-            image:
-              "https://4.bp.blogspot.com/-S9iMvM5-DcI/VoX5L4XQDlI/AAAAAAAA2TA/JiN-OviBAcE/s800/food_mamegohan.png",
-          },
-        ],
-        candidates: [
-          {
-            id: 1,
-            name: "パスタ",
-            image: require("~/assets/images/red-wine.png"),
-          },
-          {
-            id: 2,
-            name: "パスタ",
-            image: require("~/assets/images/red-wine.png"),
-          },
-          {
-            id: 3,
-            name: "パスタ",
-            image: require("~/assets/images/red-wine.png"),
-          },
-          {
-            id: 4,
-            name: "パスタ",
-            image: require("~/assets/images/red-wine.png"),
-          },
-          {
-            id: 5,
-            name: "パスタ",
-            image: require("~/assets/images/red-wine.png"),
-          },
-          {
-            id: 6,
-            name: "パスタ",
-            image: require("~/assets/images/red-wine.png"),
-          },
-        ],
+        match: {
+          id: 12, // レビューページ用組み合わせID
+          alcoholicBeverage: alcoholicBeverage,
+          oneNibble: oneNibble,
+          twoNibble: twoNibble,
+        },
+        candidates: candicates,
       };
     },
   },
@@ -173,7 +174,7 @@ export default {
 }
 
 .fusion-champion-item > span {
-  @apply my-2 font-bold;
+  @apply block my-2 font-bold;
 }
 
 .fusion-champion-item > img {
@@ -184,7 +185,7 @@ export default {
 }
 
 .with-image {
-  @apply mx-auto my-8 h-8;
+  @apply mx-auto my-6 h-8;
 }
 
 .start-review-button {
@@ -192,8 +193,13 @@ export default {
   background: linear-gradient(to bottom right, #ff7186, #ff7186 80%, #ff7a5c);
 }
 
-.fusion-champion-candidate {
+.fusion-champion-alcoholic-beverage {
   @apply block mx-auto my-4 rounded-lg shadow-lg;
+  max-height: 240px;
+}
+
+.fusion-champion-alcoholic-beverage-name {
+  @apply block my-2 font-bold text-center text-lg;
 }
 
 .result-others {
@@ -210,10 +216,14 @@ export default {
 
 .result-others-list > li {
   @apply w-2/5 mx-2 my-1 text-center font-bold relative;
+  height: 120px;
 }
 
 .result-others-list img {
   @apply rounded-lg;
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
 }
 
 .result-others-list span {
