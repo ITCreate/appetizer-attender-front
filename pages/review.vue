@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto">
     <div class="combo-set">
-      <h1 class="title">　＜　　　　　<img src="~assets/image/food_edamame.png">×<img src="~assets/image/kunsei_cheese.png">×<img src="~assets/image/drink_nihonsyu.png"></h1>
+      <h1 class="title">　＜　　　　　<img src="~assets/image/food_edamame.png">×<img src="~assets/image/kunsei_cheese.png">×<img src="~assets/images/japanese-sake.png"></h1>
     </div>
     <div class="comment-window">
       <img src="~assets/image/animal_panda.png">　以外に合う！　★×5<br>

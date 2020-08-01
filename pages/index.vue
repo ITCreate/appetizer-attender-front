@@ -4,7 +4,7 @@
       <div class="hero-image-wrapper">
         <img
           class="hero-image"
-          src="~assets/image/main-logo-white.png"
+          src="~assets/images/main-logo-white.png"
         />
       </div>
       <h1 class="hero-message">今日のあなたはどのお酒？</h1>
