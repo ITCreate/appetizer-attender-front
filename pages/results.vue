@@ -11,8 +11,8 @@
       </h1>
       <div class="fusion-champion">
         <div class="fusion-champion-item">
-          <img :src="results.match.oneNibble.image">
-          <span>{{results.match.oneNibble.name}}</span>
+          <!-- <img :src="results.match.oneNibble.image">
+          <span>{{results.match.oneNibble.name}}</span> -->
         </div>
         <img
           class="cross-mark"
@@ -20,8 +20,8 @@
           alt="×"
         >
         <div class="fusion-champion-item">
-          <img :src="results.match.twoNibble.image">
-          <span>{{results.match.twoNibble.name}}</span>
+          <!-- <img :src="results.match.twoNibble.image">
+          <span>{{results.match.twoNibble.name}}</span> -->
         </div>
       </div>
       <div>
@@ -30,10 +30,10 @@
           src="~/assets/images/with.png"
           alt="with"
         >
-        <img
+        <!-- <img
           class="fusion-champion-alcoholic-beverage"
           :src="results.match.alcoholicBeverage.image"
-        >
+        > -->
       </div>
       <button
         class="start-review-button"
@@ -60,11 +60,22 @@ export default {
   data: () => ({
     results: [],
   }),
-  created() {
-    this.results = this.fetchResults();
+  async created() {
+    this.results = await this.fetchResults();
   },
   methods: {
-    fetchResults() {
+    async fetchResults() {
+      console.log(this.$route.params.swipes);
+
+      const requestPayload = {
+        alcoholic_beverage_id: this.$route.params.swipes.alcoholicBeverage.id,
+        select_nibbles: this.$route.params.swipes.selectNibbles,
+      };
+
+      const d = await this.$axios.$post("/nibbles/result", {
+        params: requestPayload,
+      });
+      console.log(d);
       // 結果を取得するAPIを叩く
       // バックエンド対応待ち
       // とりあえずダミーデータ
