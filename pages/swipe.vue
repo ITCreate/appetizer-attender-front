@@ -1,14 +1,8 @@
 <template>
   <div id="app">
-    <h1>SWIPE!</h1>
     <VueTinder ref="tinder" key-name="id" :queue.sync="queue" :offset-y="10" @submit="onSubmit">
       <template slot-scope="scope">
-        <div
-          class="pic"
-          :style="{
-            'background-image': `url(https://cn.bing.com//th?id=OHR.${scope.data.id}_UHD.jpg&pid=hp&w=720&h=1280&rs=1&c=4&r=0)`
-          }"
-        />
+        <div class="pic" :style="{'background-image': `url(${scope.data.id})`}"/>
       </template>
       <img class="like-pointer" slot="like" src="~/assets/like-txt.png">
       <img class="nope-pointer" slot="nope" src="~/assets/nope-txt.png">
@@ -31,23 +25,19 @@ export default {
   },
   data: () => ({
     queue: [],
-    offset: 0
+    offset: 0,
   }),
   created() {
     this.mock();
   },
   methods: {
-    mock(count = 5) {
+    mock() {
       const list = [];
-      const source = [
-        "AdelieBreeding_ZH-CN1750945258",
-        "BarcolanaTrieste_ZH-CN5745744257",
-        "RedRocksArches_ZH-CN5664546697",
-        "NationalDay70_ZH-CN1636316274",
-        "LofotenSurfing_ZH-CN5901239545",
-      ];
-      for (let i = 0; i < count; i++) {
-        list.push({ id: source[this.offset] });
+      // APIを叩く
+      // 現在バックエンドは実装中なのでダミーデータ
+      const nibbles = this.fetchNibbles();
+      for (let i = 0; i < nibbles.length + 1; i++) {
+        list.push({ id: nibbles[this.offset] });
         this.offset++;
       }
       this.queue = this.queue.concat(list);
@@ -57,8 +47,16 @@ export default {
         this.mock();
       }
     },
-    decide (choice) {
-      this.$refs.tinder.decide(choice)
+    decide(choice) {
+      this.$refs.tinder.decide(choice);
+    },
+    fetchNibbles() {
+      return [
+        "https://cn.bing.com//th?id=OHR.AdelieBreeding_ZH-CN1750945258_UHD.jpg&pid=hp&w=720&h=1280&rs=1&c=4&r=0",
+        "https://cn.bing.com//th?id=OHR.BarcolanaTrieste_ZH-CN5745744257_UHD.jpg&pid=hp&w=720&h=1280&rs=1&c=4&r=0",
+        "https://cn.bing.com//th?id=OHR.RedRocksArches_ZH-CN5664546697_UHD.jpg&pid=hp&w=720&h=1280&rs=1&c=4&r=0",
+        "https://cn.bing.com//th?id=OHR.LofotenSurfing_ZH-CN5901239545_UHD.jpg&pid=hp&w=720&h=1280&rs=1&c=4&r=0",
+      ]
     }
   }
 };
