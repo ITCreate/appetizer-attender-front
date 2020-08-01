@@ -37,7 +37,10 @@ export default {
       // 現在バックエンドは実装中なのでダミーデータ
       const nibbles = this.fetchNibbles();
       for (let i = 0; i < nibbles.length + 1; i++) {
-        list.push({ id: nibbles[this.offset] });
+        list.push({
+          id:   typeof nibbles[this.offset] === "undefined" ? undefined : nibbles[this.offset].image,
+          name: typeof nibbles[this.offset] === "undefined" ? undefined : nibbles[this.offset].name,
+        });
         this.offset++;
       }
       this.queue = this.queue.concat(list);
@@ -52,10 +55,22 @@ export default {
     },
     fetchNibbles() {
       return [
-        "https://cn.bing.com//th?id=OHR.AdelieBreeding_ZH-CN1750945258_UHD.jpg&pid=hp&w=720&h=1280&rs=1&c=4&r=0",
-        "https://cn.bing.com//th?id=OHR.BarcolanaTrieste_ZH-CN5745744257_UHD.jpg&pid=hp&w=720&h=1280&rs=1&c=4&r=0",
-        "https://cn.bing.com//th?id=OHR.RedRocksArches_ZH-CN5664546697_UHD.jpg&pid=hp&w=720&h=1280&rs=1&c=4&r=0",
-        "https://cn.bing.com//th?id=OHR.LofotenSurfing_ZH-CN5901239545_UHD.jpg&pid=hp&w=720&h=1280&rs=1&c=4&r=0",
+        {
+          name: "枝豆",
+          image: "https://cn.bing.com//th?id=OHR.AdelieBreeding_ZH-CN1750945258_UHD.jpg&pid=hp&w=720&h=1280&rs=1&c=4&r=0",
+        },
+        {
+          name: "チーズ",
+          image: "https://cn.bing.com//th?id=OHR.BarcolanaTrieste_ZH-CN5745744257_UHD.jpg&pid=hp&w=720&h=1280&rs=1&c=4&r=0",
+        },
+        {
+          name: "ポテチ",
+          image: "https://cn.bing.com//th?id=OHR.RedRocksArches_ZH-CN5664546697_UHD.jpg&pid=hp&w=720&h=1280&rs=1&c=4&r=0",
+        },
+        {
+          name: "餃子",
+          image: "https://cn.bing.com//th?id=OHR.LofotenSurfing_ZH-CN5901239545_UHD.jpg&pid=hp&w=720&h=1280&rs=1&c=4&r=0",
+        },
       ]
     }
   }
