@@ -1,11 +1,21 @@
 <template>
   <div class="container">
     <div>
-      <img src="~assets/image/main-logo-white.png" />
-      <h1>今日のあなたはどのお酒？</h1>
-      <ul v-for="alchole in alcoholicBeverages" :key="alchole.id">
-        <li>
-          <img :src="alchole.image" @click="redirectSwipe(alchole)" width="100" height="100" />
+      <div class="hero-image-wrapper">
+        <img
+          class="hero-image"
+          src="~assets/image/main-logo-white.png"
+        />
+      </div>
+      <h1 class="hero-message">今日のあなたはどのお酒？</h1>
+      <ul class="alchole-items">
+        <li
+          class="alchole-item"
+          v-for="alchole in alcoholicBeverages"
+          :key="alchole.id"
+          @click="redirectSwipe(alchole, $event.target)"
+        >
+          <img :src="alchole.image" />
         </li>
       </ul>
     </div>
@@ -17,7 +27,7 @@ export default {
   data() {
     return {
       alcoholicBeverages: [],
-    }
+    };
   },
   created() {
     this.alcoholicBeverages = this.fetchAlcoholicBeverages();
@@ -30,42 +40,102 @@ export default {
         {
           id: 1,
           name: "白ワイン",
-          image: require("~/assets/image/white_wine.png"),
+          image: require("~/assets/images/white-wine.png"),
         },
         {
           id: 2,
           name: "ビール",
-          image: require("~/assets/image/drink_beer.png"),
+          image: require("~/assets/images/beer.png"),
         },
         {
           id: 3,
           name: "日本酒",
-          image: require("~/assets/image/drink_nihonsyu.png"),
+          image: require("~/assets/images/japanese-sake.png"),
         },
         {
           id: 4,
           name: "カクテル",
-          image: require("~/assets/image/drink_cocktail.png"),
+          image: require("~/assets/images/cocktail.png"),
         },
         {
           id: 5,
           name: "赤ワイン",
-          image: require("~/assets/image/red_wine.png"),
+          image: require("~/assets/images/red-wine.png"),
         },
         {
           id: 6,
           name: "ハイボール",
-          image: require("~/assets/image/party_highball_glass.png"),
-        }
+          image: require("~/assets/images/mojito.png"),
+        },
       ];
     },
-    redirectSwipe(alchole) {
-      // 遷移先にalchole情報も渡す
-      this.$router.push("/swipe");
+    redirectSwipe(alchole, target) {
+      target.parentNode.classList.toggle("action");
+      setTimeout(() => {
+        target.parentNode.classList.toggle("action");
+
+        // TODO: 遷移先にalchole情報も渡す
+        this.$router.push("/swipe");
+      }, 1000);
     },
-  }
-}
+  },
+};
 </script>
 
-<style>
+<style lang="postcss" scoped>
+.hero-image-wrapper {
+  border-bottom-right-radius: 50%;
+  border-bottom-left-radius: 50%;
+  padding: 25% 20% 20%;
+  background: linear-gradient(to bottom, #ffdce1, #ff7186 80%, #ff7a5c);
+}
+
+.hero-message {
+  @apply my-6 text-center text-2xl font-bold;
+  color: #575757;
+}
+
+.alchole-items {
+  @apply flex flex-wrap mx-4;
+}
+
+.alchole-item {
+  flex-grow: 1;
+  width: 25%;
+  margin: 2% 2%;
+  @apply shadow-lg rounded-lg overflow-hidden;
+}
+
+.alchole-item > img {
+  width: 8rem;
+  height: 7rem;
+  object-fit: cover;
+  @apply rounded-lg;
+}
+
+.alchole-item.action {
+  transform: scale(1);
+  cursor: default;
+}
+
+.alchole-item.action::after {
+  @apply absolute top-0 right-0 left-0 bottom-0;
+  transform: translateX(-100%);
+  cursor: default;
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.3) 20%,
+    rgba(255, 255, 255, 0.4) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  animation: shimmer 1s;
+  content: "";
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
 </style>
