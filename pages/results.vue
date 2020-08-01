@@ -11,8 +11,8 @@
       </h1>
       <div class="fusion-champion">
         <div class="fusion-champion-item">
-          <img :src="results.top_two[0].image">
-          <span>{{results.top_two[0].name}}</span>
+          <img :src="results.match.oneNibble.image">
+          <span>{{results.match.oneNibble.name}}</span>
         </div>
         <img
           class="cross-mark"
@@ -20,8 +20,8 @@
           alt="×"
         >
         <div class="fusion-champion-item">
-          <img :src="results.top_two[1].image">
-          <span>{{results.top_two[1].name}}</span>
+          <img :src="results.match.twoNibble.image">
+          <span>{{results.match.twoNibble.name}}</span>
         </div>
       </div>
       <div>
@@ -31,8 +31,8 @@
           alt="with"
         >
         <img
-          class="fusion-champion-candidate"
-          :src="results.candidates[2].image"
+          class="fusion-champion-alcoholic-beverage"
+          :src="results.match.alcoholicBeverage.image"
         >
       </div>
       <button
@@ -69,50 +69,25 @@ export default {
       // バックエンド対応待ち
       // とりあえずダミーデータ
       return {
-        top_two: [
-          {
-            id: 1,
-            name: "餃子",
-            image:
-              "https://1.bp.blogspot.com/-JgCCcKaPehk/XuRAqUWJgLI/AAAAAAABZgQ/hY77s2QpJjQG1kk78jR91O4LRrinBRWaQCNcBGAsYHQ/s1600/food_jelly_fry.png",
+        match: {
+          id: 12, // レビューページ用組み合わせID
+          alcoholicBeverage: {
+            name: "日本酒",
+            image: "http://placehold.it/300x500",
           },
-          {
-            id: 2,
-            name: "ごはん",
-            image:
-              "https://4.bp.blogspot.com/-S9iMvM5-DcI/VoX5L4XQDlI/AAAAAAAA2TA/JiN-OviBAcE/s800/food_mamegohan.png",
+          oneNibble: {
+            name: "えだまめ",
+            image: "http://placehold.it/300x500",
           },
-        ],
+          twoNibble: {
+            name: "からあげ",
+            image: "http://placehold.it/300x500",
+          },
+        },
         candidates: [
           {
-            id: 1,
-            name: "パスタ",
-            image: require("~/assets/images/red-wine.png"),
-          },
-          {
-            id: 2,
-            name: "パスタ",
-            image: require("~/assets/images/red-wine.png"),
-          },
-          {
-            id: 3,
-            name: "パスタ",
-            image: require("~/assets/images/red-wine.png"),
-          },
-          {
-            id: 4,
-            name: "パスタ",
-            image: require("~/assets/images/red-wine.png"),
-          },
-          {
-            id: 5,
-            name: "パスタ",
-            image: require("~/assets/images/red-wine.png"),
-          },
-          {
-            id: 6,
-            name: "パスタ",
-            image: require("~/assets/images/red-wine.png"),
+            name: "からあげ",
+            image: "http://placehold.it/300x500",
           },
         ],
       };
@@ -173,7 +148,7 @@ export default {
 }
 
 .fusion-champion-item > span {
-  @apply my-2 font-bold;
+  @apply block my-2 font-bold;
 }
 
 .fusion-champion-item > img {
@@ -184,7 +159,7 @@ export default {
 }
 
 .with-image {
-  @apply mx-auto my-8 h-8;
+  @apply mx-auto my-6 h-8;
 }
 
 .start-review-button {
@@ -192,8 +167,9 @@ export default {
   background: linear-gradient(to bottom right, #ff7186, #ff7186 80%, #ff7a5c);
 }
 
-.fusion-champion-candidate {
+.fusion-champion-alcoholic-beverage {
   @apply block mx-auto my-4 rounded-lg shadow-lg;
+  max-height: 240px;
 }
 
 .result-others {
