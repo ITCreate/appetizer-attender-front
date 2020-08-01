@@ -17,7 +17,7 @@
         <template slot-scope="scope">
           <div
             class="pic"
-            :style="{'background-image': `url(${scope.data.id})`}"
+            :style="{'background-image': `url(${scope.data.image})`}"
           />
         </template>
         <img
@@ -40,21 +40,21 @@
         <div class="swipe-button">
           <img
             src="~/assets/images/nope.png"
-            @click="decide('nope')"
+            @click="decide('nope'); cantEat();"
           >
           <span>食べれない</span>
         </div>
         <div class="swipe-button">
           <img
             src="~/assets/images/super-like.png"
-            @click="decide('super')"
+            @click="decide('super'); canEat();"
           >
           <span>好きなもの</span>
         </div>
         <div class="swipe-button">
           <img
             src="~/assets/images/like.png"
-            @click="decide('like')"
+            @click="decide('like'); canEat();"
           >
           <span>食べれる</span>
         </div>
@@ -72,42 +72,53 @@ export default {
   },
   data: () => ({
     alcoholicBeverage: {},
+    nibbles: [],
     queue: [],
     offset: 0,
   }),
   created() {
     this.getAlcoholicBeverage();
-    this.mock();
+    this.fetchNibbles();
   },
   methods: {
     getAlcoholicBeverage() {
       this.alcoholicBeverage = this.$route.params.alcoholicBeverage;
     },
+    async fetchNibbles() {
+      await this.$axios.get("/nibbles").then(res => {
+        this.nibbles = res.data;
+        this.mock();
+      });
+    },
     mock() {
       const list = [];
-      // APIを叩く
-      // 現在バックエンドは実装中なのでダミーデータ
-      const nibbles = this.fetchNibbles();
+      const nibbles = this.nibbles;
       for (let i = 0; i < nibbles.length + 1; i++) {
         list.push({
           id:
             typeof nibbles[this.offset] === "undefined"
               ? undefined
-              : nibbles[this.offset].image,
+              : nibbles[this.offset].id,
           name:
             typeof nibbles[this.offset] === "undefined"
               ? undefined
               : nibbles[this.offset].name,
+          image:
+            typeof nibbles[this.offset] === "undefined"
+              ? undefined
+              : nibbles[this.offset].image,
         });
         this.offset++;
       }
       this.queue = this.queue.concat(list);
     },
     onSubmit({ item }) {
-      // ここにスワイプ情報を保存する処理を書く
+      this.saveSwipe(item, "食べれるか食べられへんかみたいなステータス取って渡したいけどやり方が分からん");
       if (this.canMoveResult()) {
         // スワイプ情報も遷移先に渡すようにする
-        this.$router.push("/results");
+        this.$router.push({ name: "results", params: {
+          swipes: "スワイプ情報がここに入ります"
+        } });
       }
       if (this.queue.length < 3) {
         this.mock();
@@ -116,29 +127,14 @@ export default {
     decide(choice) {
       this.$refs.tinder.decide(choice);
     },
-    fetchNibbles() {
-      return [
-        {
-          name: "枝豆",
-          image:
-            "https://cn.bing.com//th?id=OHR.AdelieBreeding_ZH-CN1750945258_UHD.jpg&pid=hp&w=720&h=1280&rs=1&c=4&r=0",
-        },
-        {
-          name: "チーズ",
-          image:
-            "https://cn.bing.com//th?id=OHR.BarcolanaTrieste_ZH-CN5745744257_UHD.jpg&pid=hp&w=720&h=1280&rs=1&c=4&r=0",
-        },
-        {
-          name: "ポテチ",
-          image:
-            "https://cn.bing.com//th?id=OHR.RedRocksArches_ZH-CN5664546697_UHD.jpg&pid=hp&w=720&h=1280&rs=1&c=4&r=0",
-        },
-        {
-          name: "餃子",
-          image:
-            "https://cn.bing.com//th?id=OHR.LofotenSurfing_ZH-CN5901239545_UHD.jpg&pid=hp&w=720&h=1280&rs=1&c=4&r=0",
-        },
-      ];
+    canEat() {
+      this.saveSwipe(item, "食べれるか食べられへんかみたいなステータス取って渡したいけどやり方が分からん");
+    },
+    cantEat() {
+      this.saveSwipe(item, "食べれるか食べられへんかみたいなステータス取って渡したいけどやり方が分からん");
+    },
+    saveSwipe(item, status) {
+      // ゴニョる
     },
     canMoveResult() {
       return this.queue
