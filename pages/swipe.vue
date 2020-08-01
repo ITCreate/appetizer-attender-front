@@ -42,21 +42,21 @@
             src="~/assets/images/nope.png"
             @click="decide('nope')"
           >
-          <span>合わない</span>
+          <span>食べれない</span>
         </div>
         <div class="swipe-button">
           <img
             src="~/assets/images/super-like.png"
             @click="decide('super')"
           >
-          <span>めっちゃ合う</span>
+          <span>好きなもの</span>
         </div>
         <div class="swipe-button">
           <img
             src="~/assets/images/like.png"
             @click="decide('like')"
           >
-          <span>合う</span>
+          <span>食べれる</span>
         </div>
       </div>
     </div>
